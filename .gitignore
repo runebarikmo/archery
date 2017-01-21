@@ -1,16 +1,8 @@
-lib_managed
-project7/boot
-project7/plugins/src_managed
-project7/plugins/project
 project/boot
-project/build/target
-project/plugins/lib_managed
-project/plugins/project
-project/plugins/src_managed
-project/plugins/target
 target
 .ensime
 .ensime_lucene
+.ensime_cache
 TAGS
 \#*#
 *~
@@ -18,3 +10,13 @@ TAGS
 .lib
 .history
 .*.swp
+.idea
+.idea/*
+.idea_modules
+.DS_Store
+.sbtrc
+*.sublime-project
+*.sublime-workspace
+tests.iml
+# Auto-copied by sbt-microsites
+docs/src/main/tut/contributing.md

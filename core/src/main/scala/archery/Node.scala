@@ -1,7 +1,6 @@
 package archery
 
-import scala.collection.mutable.{ArrayBuffer, PriorityQueue}
-import scala.math.{min, max}
+import scala.collection.mutable
 
 /**
  * Some useful constants that we don't want to hardcode.
@@ -45,7 +44,7 @@ sealed abstract class Node[A] extends HasGeom { self =>
    * a root node, so it should not be used for traversals.
    */
   def entries: Vector[Entry[A]] = {
-    val buf = ArrayBuffer.empty[Entry[A]]
+    val buf = mutable.ArrayBuffer.empty[Entry[A]]
     def recur(node: Node[A]): Unit = node match {
       case Leaf(children, _) =>
         buf ++= children
@@ -125,7 +124,7 @@ sealed abstract class Node[A] extends HasGeom { self =>
         }
 
       case Branch(children, box) =>
-        assert(children.length > 0)
+        assert(children.nonEmpty)
 
         // here we need to find the "best" child to put the entry
         // into. we define that as the child that needs to add the
@@ -235,7 +234,7 @@ sealed abstract class Node[A] extends HasGeom { self =>
    */
   def genericSearch(space: Box, check: Geom => Boolean, f: Entry[A] => Boolean): Seq[Entry[A]] =
     if (!space.isFinite) Nil else {
-      val buf = ArrayBuffer.empty[Entry[A]]
+      val buf = mutable.ArrayBuffer.empty[Entry[A]]
       def recur(node: Node[A]): Unit = node match {
         case Leaf(children, box) =>
           children.foreach { c =>
@@ -313,7 +312,7 @@ sealed abstract class Node[A] extends HasGeom { self =>
    * This method returns the distance of the farthest entry that is
    * still included.
    */
-  def nearestK(pt: Point, k: Int, d0: Double, pq: PriorityQueue[(Double, Entry[A])]): Double = {
+  def nearestK(pt: Point, k: Int, d0: Double, pq: mutable.PriorityQueue[(Double, Entry[A])]): Double = {
     var dist: Double = d0
     this match {
       case Leaf(children, box) =>
@@ -485,13 +484,13 @@ object Node {
    * is simple and has worked well for us in the past.
    */
   def splitter[M <: HasGeom](children: Vector[M]): ((Vector[M], Box), (Vector[M], Box)) = {
-    val buf = ArrayBuffer(children: _*)
+    val buf = mutable.ArrayBuffer(children: _*)
     val (seed1, seed2) = pickSeeds(buf)
 
     var box1: Box = seed1.geom.toBox
     var box2: Box = seed2.geom.toBox
-    val nodes1 = ArrayBuffer(seed1)
-    val nodes2 = ArrayBuffer(seed2)
+    val nodes1 = mutable.ArrayBuffer(seed1)
+    val nodes2 = mutable.ArrayBuffer(seed2)
 
     def add1(node: M): Unit = { nodes1 += node; box1 = box1.expand(node.geom) }
     def add2(node: M): Unit = { nodes2 += node; box2 = box2.expand(node.geom) }
@@ -551,7 +550,7 @@ object Node {
    * dimensions) might give better seeds but would be slower. This
    * seems to work OK for now.
    */
-  def pickSeeds[M <: HasGeom](nodes: ArrayBuffer[M]): (M, M) = {
+  def pickSeeds[M <: HasGeom](nodes: mutable.ArrayBuffer[M]): (M, M) = {
 
     // find the two geometries that have the most space between them
     // in this particular dimension. the sequence is (lower, upper) points

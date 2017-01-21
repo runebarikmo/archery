@@ -1,7 +1,6 @@
 package archery
 
-import scala.collection.mutable.{ArrayBuffer, PriorityQueue}
-import scala.math.{min, max}
+import scala.collection.mutable
 import scala.util.Try
 
 object RTree {
@@ -161,7 +160,7 @@ case class RTree[A](root: Node[A], size: Int) {
       Vector.empty
     } else {
       implicit val ord = Ordering.by[(Double, Entry[A]), Double](_._1)
-      val pq = PriorityQueue.empty[(Double, Entry[A])]
+      val pq = mutable.PriorityQueue.empty[(Double, Entry[A])]
       root.nearestK(pt, k, Double.PositiveInfinity, pq)
       val arr = new Array[Entry[A]](pq.size)
       var i = arr.length - 1

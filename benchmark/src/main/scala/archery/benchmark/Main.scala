@@ -1,11 +1,9 @@
 package archery
 package benchmark
 
-import scala.collection.mutable.ArrayBuffer
-import scala.math.{min, max}
-import scala.util.Random.{nextFloat, nextInt, nextGaussian}
-
 import ichi.bench.Thyme
+
+import scala.util.Random.nextGaussian
 
 // $COVERAGE-OFF$
 object Main {
