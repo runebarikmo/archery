@@ -315,7 +315,7 @@ sealed abstract class Node[A] extends HasGeom { self =>
   def nearestK(pt: Point, k: Int, d0: Double, pq: mutable.PriorityQueue[(Double, Entry[A])]): Double = {
     var dist: Double = d0
     this match {
-      case Leaf(children, box) =>
+      case Leaf(children, _) =>
         children.foreach { entry =>
           val d = entry.geom.distance(pt)
           if (d < dist) {
@@ -326,7 +326,7 @@ sealed abstract class Node[A] extends HasGeom { self =>
             }
           }
         }
-      case Branch(children, box) =>
+      case Branch(children, _) =>
         val cs = children.map(node => (node.box.distance(pt), node)).sortBy(_._1)
         cs.foreach { case (d, node) =>
           if (d >= dist) return dist //scalastyle:ignore
